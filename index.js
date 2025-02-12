@@ -198,6 +198,88 @@ app.get("/myPosts", async (req, res) => {
   });
   
 
+  // user role find
+app.get('/userRole', async(req,res)=>{
+    const email = req.query.email;
+    const userRole = await UserData.findOne({ email }).select("role");
+    console.log(userRole);
+    res.send(userRole?.role)
+  })
+  
+  
+  
+  // show details data
+  app.get("/posts/:id", async (req, res) => {
+    let id = req.params.id;
+    let data = await AllReports.findById(id);
+    res.send(data);
+  });
+  
+  // update post either it is verified or rejected
+  app.put("/posts/:id", async (req, res) => {
+    let id = req.params.id;
+    let updatedData = await AllReports.findByIdAndUpdate(id, {
+      verification_status: req.body.verification_status,
+    });
+    console.log(updatedData);
+    res.send(updatedData);
+  });
+  
+  // home page recent report data
+  app.get("/home/allReports", async (req, res) => {
+    let allReports = await AllReports.find({}).sort({ posted_time: -1 }).limit(4);
+    res.send(allReports);
+  });
+  
+  // home page success story report data
+  app.get("/home/successReports", async (req, res) => {
+    let successReports = await SuccessReports.find({}).sort({ posted_date: -1 }).limit(4); 
+    res.send(successReports);
+  });
+  
+  // // see user data
+  // app.get("/userReports", async (req, res) => {
+  //   let email = req.query.email;
+  //   const user = await UserData.findOne({ email: email }).populate("posts");
+  
+  //   let result = user.posts;
+  //   res.send(result);
+  // });
+  
+  // success report get
+  app.get("/successReport", async (req, res) => {
+    let allSuccessReports = await SuccessReports.find({}).sort({
+      posted_time: -1,
+    });
+    res.send(allSuccessReports);
+  });
+  
+  app.get("/successReport/:id", async(req,res)=>{
+    let id = req.params.id;
+    let result = await SuccessReports.findById(id);
+    res.send(result);
+  })
+  
+  app.post("/successReport", async (req, res) => {
+    let successReportPost = req.body;
+    console.log(successReportPost);
+  
+    let newSuccessPost = new SuccessReports(successReportPost);
+    let result = await newSuccessPost.save();
+  
+    res.send(result);
+  });
+  
+  app.put("/successReport/:id", async(req,res)=>{
+    let id = req.params.id;
+    let updatedData = req.body;
+  
+    let result = await SuccessReports.findByIdAndUpdate(id, updatedData);
+  
+    res.send(result);
+  })
+  
+
 
 
 app.listen(port, () => {
