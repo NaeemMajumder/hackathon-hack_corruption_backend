@@ -121,6 +121,14 @@ app.put("/admin/allUsers/:id", async (req, res) => {
   });
 
 
+  app.get("/admin/allUsers/:id", async (req, res) => {
+    let id = req.params.id;
+    console.log(id);
+    let userData = await UserData.findById(id);
+    res.send(userData);
+  });
+
+
 
 
 
