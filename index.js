@@ -70,29 +70,47 @@ app.get("/userData", async (req, res) => {
 
 // update user data
 app.put("/userData", async (req, res) => {
-    let email = req.query.email;
-    console.log(email);
-  
-    let userData = req.body;
-  
-    let updatedData = {
-      username:userData.name,
-      email,
-      bio:userData.bio,
-      phone: userData.phone_number,
-      photoUrl: userData.profilePicture,
-    };
-  
-    // Update the user document in the database
-    const updatedUser = await UserData.findOneAndUpdate(
-      { email: email },
-      { $set: updatedData }, 
-      { new: true } 
-    );
-  
-    res.send(updatedData);
+  let email = req.query.email;
+  console.log(email);
+
+  let userData = req.body;
+
+  let updatedData = {
+    username: userData.name,
+    email,
+    bio: userData.bio,
+    phone: userData.phone_number,
+    photoUrl: userData.profilePicture,
+  };
+
+  // Update the user document in the database
+  const updatedUser = await UserData.findOneAndUpdate(
+    { email: email },
+    { $set: updatedData },
+    { new: true }
+  );
+
+  res.send(updatedData);
+});
+
+// user latest post
+app.get("/latestPosts", async (req, res) => {
+  const email = req.query.email;
+  const user = await UserData.findOne({ email: email }).populate({
+    path: "posts",
+    options: { sort: { _id: -1 }, limit: 3 },
   });
-  
+  const userLatestPost = user?.posts;
+
+  const userPosts = await UserData.findOne({ email: email }).populate({
+    path: "posts",
+    options: { sort: { _id: -1 } },
+  });
+  const totalPosts = userPosts?.posts.length;
+
+  res.send({ userLatestPost, totalPosts });
+});
+
 
 
 
