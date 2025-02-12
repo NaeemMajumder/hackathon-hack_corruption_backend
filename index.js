@@ -136,6 +136,50 @@ app.get("/allReports", async (req, res) => {
   });
 
 
+  // create post
+app.post("/createPost", async (req, res) => {
+    let postData = req.body;
+    console.log(postData);
+    let newPost = {};
+  
+    if (postData.phoneNumber) {
+      newPost = {
+        name: postData.name,
+        email: postData.email,
+        phone_number: postData.phoneNumber,
+        userPhoto: postData.userPhoto,
+        title: postData.title,
+        description: postData.description,
+        district: postData.district,
+        division: postData.division,
+        location: postData.location,
+        crime_time: postData.crimeTime,
+        photo_url: postData.imageUrl,
+        video_url: postData?.video_url,
+        category: postData.category,
+      };
+    } else {
+      newPost = {
+        title: postData.title,
+        description: postData.description,
+        district: postData.district,
+        division: postData.division,
+        location: postData.location,
+        crime_time: postData.crimeTime,
+        photo_url: postData.imageUrl,
+        video_url: postData?.videoUrl,
+        category: postData.category,
+      };
+    }
+  
+    const user = await UserData.findOne({ email: req.query.email });
+  
+    let newPostedData = new AllReports(newPost);
+    let result = await newPostedData.save();
+    user.posts.push(result?._id);
+    await user.save();
+    res.send("result");
+  });
 
 
 
