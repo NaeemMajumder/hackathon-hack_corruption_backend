@@ -129,6 +129,11 @@ app.put("/admin/allUsers/:id", async (req, res) => {
   });
 
 
+  // public corruption report post
+app.get("/allReports", async (req, res) => {
+    let allReports = await AllReports.find({}).sort({ createdAt: -1 }); // Sorting by createdAt in descending order
+    res.send(allReports);
+  });
 
 
 
