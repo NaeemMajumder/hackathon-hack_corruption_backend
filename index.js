@@ -31,6 +31,11 @@ async function main() {
 }
 
 
+// mongoose schema import
+let UserData = require("./models/UserData.js");
+let AllReports = require("./models/allReports.js");
+let SuccessReports = require("./models/SuccessReports.js");
+
 app.get('/',(req,res)=>{
     res.send("this is a root route");
 })
