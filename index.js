@@ -128,52 +128,6 @@ app.get("/allReports", async (req, res) => {
   let allReports = await AllReports.find({}).sort({ createdAt: -1 }); // Sorting by createdAt in descending order
   res.send(allReports);
 });
-
-// // create post
-// app.post("/createPost", async (req, res) => {
-//   let postData = req.body;
-//   console.log(postData);
-//   let newPost = {};
-
-//   if (postData.phoneNumber) {
-//     newPost = {
-//       name: postData.name,
-//       email: postData.email,
-//       phone_number: postData.phoneNumber,
-//       userPhoto: postData.userPhoto,
-//       title: postData.title,
-//       description: postData.description,
-//       district: postData.district,
-//       division: postData.division,
-//       location: postData.location,
-//       crime_time: postData.crimeTime,
-//       photo_url: postData.imageUrl,
-//       video_url: postData?.video_url,
-//       category: postData.category,
-//     };
-//   } else {
-//     newPost = {
-//       title: postData.title,
-//       description: postData.description,
-//       district: postData.district,
-//       division: postData.division,
-//       location: postData.location,
-//       crime_time: postData.crimeTime,
-//       photo_url: postData.imageUrl,
-//       video_url: postData?.videoUrl,
-//       category: postData.category,
-//     };
-//   }
-
-//   const user = await UserData.findOne({ email: req.query.email });
-
-//   let newPostedData = new AllReports(newPost);
-//   let result = await newPostedData.save();
-//   user.posts.push(result?._id);
-//   await user.save();
-//   res.send("result");
-// });
-
 async function postReport(title, description, imageDescription) {
     const url = 'https://mahmudur.app.n8n.cloud/webhook/4420ecc1-4b93-42a9-a8ba-613059e499bb';
     const formData = new URLSearchParams();
@@ -193,74 +147,127 @@ async function postReport(title, description, imageDescription) {
    
   // Example usage
   // postReport('Example Title', 'Example Description', 'Example Image Description');
-
+// // create post
 app.post("/createPost", async (req, res) => {
-    try {
-      let postData = req.body;
-      console.log(postData);
-      let newPost = {};
-  
-      if (postData.phoneNumber) {
-        newPost = {
-          name: postData.name,
-          email: postData.email,
-          phone_number: postData.phoneNumber,
-          userPhoto: postData.userPhoto,
-          title: postData.title,
-          description: postData.description,
-          district: postData.district,
-          division: postData.division,
-          location: postData.location,
-          crime_time: postData.crimeTime,
-          photo_url: postData.imageUrl, // Store the processed image URL
-          video_url: postData?.video_url,
-          category: postData.category,
-        };
-      } else {
-        newPost = {
-          title: postData.title,
-          description: postData.description,
-          district: postData.district,
-          division: postData.division,
-          location: postData.location,
-          crime_time: postData.crimeTime,
-          photo_url: postData.imageUrl, // Store the processed image URL
-          video_url: postData?.videoUrl,
-          category: postData.category,
-        };
-      }
-  
-      // Download, Resize, and Add Watermark
-      const processedImagePath = await processImage(postData.imageUrl);
-  
-      // Update the stored image URL with the processed one
-      newPost.photo_url = processedImagePath;
+  let postData = req.body;
+  console.log(postData);
+  let newPost = {};
 
-  
-      const user = await UserData.findOne({ email: req.query.email });
-  
-      let newPostedData = new AllReports(newPost);
+  if (postData.phoneNumber) {
+    newPost = {
+      name: postData.name,
+      email: postData.email,
+      phone_number: postData.phoneNumber,
+      userPhoto: postData.userPhoto,
+      title: postData.title,
+      description: postData.description,
+      district: postData.district,
+      division: postData.division,
+      location: postData.location,
+      crime_time: postData.crimeTime,
+      photo_url: postData.imageUrl,
+      video_url: postData?.video_url,
+      category: postData.category,
+    };
+  } else {
+    newPost = {
+      title: postData.title,
+      description: postData.description,
+      district: postData.district,
+      division: postData.division,
+      location: postData.location,
+      crime_time: postData.crimeTime,
+      photo_url: postData.imageUrl,
+      video_url: postData?.videoUrl,
+      category: postData.category,
+    };
+  }
 
-      try{
+  const user = await UserData.findOne({ email: req.query.email });
+
+  let newPostedData = new AllReports(newPost);
+        try{
 
         await postReport(newPost.title, newPost.description, " ")
 
       }catch(error){
         console.log(error)
       }
+  let result = await newPostedData.save();
+  user.posts.push(result?._id);
+  await user.save();
+  res.send("result");
+});
 
 
 
-      let result = await newPostedData.save();
-      user.posts.push(result?._id);
-      await user.save();
+// app.post("/createPost", async (req, res) => {
+//     try {
+//       let postData = req.body;
+//       console.log(postData);
+//       let newPost = {};
   
-      res.send({ message: "Post created successfully!", imageUrl: processedImagePath });
-    } catch (error) {
-      console.error("Error processing image:", error);
-      res.status(500).send("Error processing image");
-    }
-  });
+//       if (postData.phoneNumber) {
+//         newPost = {
+//           name: postData.name,
+//           email: postData.email,
+//           phone_number: postData.phoneNumber,
+//           userPhoto: postData.userPhoto,
+//           title: postData.title,
+//           description: postData.description,
+//           district: postData.district,
+//           division: postData.division,
+//           location: postData.location,
+//           crime_time: postData.crimeTime,
+//           photo_url: postData.imageUrl, // Store the processed image URL
+//           video_url: postData?.video_url,
+//           category: postData.category,
+//         };
+//       } else {
+//         newPost = {
+//           title: postData.title,
+//           description: postData.description,
+//           district: postData.district,
+//           division: postData.division,
+//           location: postData.location,
+//           crime_time: postData.crimeTime,
+//           photo_url: postData.imageUrl, // Store the processed image URL
+//           video_url: postData?.videoUrl,
+//           category: postData.category,
+//         };
+//       }
+  
+//       // Download, Resize, and Add Watermark
+//       const processedImagePath = await processImage(postData.imageUrl);
+  
+//       // Update the stored image URL with the processed one
+//       newPost.photo_url = processedImagePath;
+
+  
+//       const user = await UserData.findOne({ email: req.query.email });
+  
+//       let newPostedData = new AllReports(newPost);
+
+//       try{
+
+//         await postReport(newPost.title, newPost.description, " ")
+
+//       }catch(error){
+//         console.log(error)
+//       }
+
+
+
+//       let result = await newPostedData.save();
+//       user.posts.push(result?._id);
+//       await user.save();
+  
+//       res.send({ message: "Post created successfully!", imageUrl: processedImagePath });
+//     } catch (error) {
+//       console.error("Error processing image:", error);
+//       res.status(500).send("Error processing image");
+//     }
+//   });
   
   /**
    * Function to download, resize, and add watermark to an image
