@@ -34,32 +34,44 @@ let UserData = require("./models/UserData.js");
 let AllReports = require("./models/allReports.js");
 let SuccessReports = require("./models/SuccessReports.js");
 
-
 app.get("/", (req, res) => {
   res.send("this is a root route");
 });
 
 // user route
 app.get("/users", async (req, res) => {
-    let allUsers = await UserData.find({});
-    res.send(allUsers);
+  let allUsers = await UserData.find({});
+  res.send(allUsers);
 });
 
 app.post("/users", async (req, res) => {
-    let data = req.body;
-    let userData = {
-      username: data.username,
-      email: data.email,
-      photoUrl: data.profileImage,
-      phone: data.phone,
-      idType: data.idType,
-      idNumber: data.idNumber,
-      identify_method_photoUrl: data.idImage,
-    };
-    let newUser = new UserData(userData);
-    let result = await newUser.save();
-    res.send(result);
-  });
+  let data = req.body;
+  let userData = {
+    username: data.username,
+    email: data.email,
+    photoUrl: data.profileImage,
+    phone: data.phone,
+    idType: data.idType,
+    idNumber: data.idNumber,
+    identify_method_photoUrl: data.idImage,
+  };
+  let newUser = new UserData(userData);
+  let result = await newUser.save();
+  res.send(result);
+});
+
+// individual user data for dashboard
+app.get("/userData", async (req, res) => {
+  let email = req.query.email;
+
+  let userData = await UserData.findOne({ email: email });
+  res.send(userData);
+});
+
+
+
+
+
 
 
 
