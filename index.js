@@ -68,7 +68,31 @@ app.get("/userData", async (req, res) => {
   res.send(userData);
 });
 
-
+// update user data
+app.put("/userData", async (req, res) => {
+    let email = req.query.email;
+    console.log(email);
+  
+    let userData = req.body;
+  
+    let updatedData = {
+      username:userData.name,
+      email,
+      bio:userData.bio,
+      phone: userData.phone_number,
+      photoUrl: userData.profilePicture,
+    };
+  
+    // Update the user document in the database
+    const updatedUser = await UserData.findOneAndUpdate(
+      { email: email },
+      { $set: updatedData }, 
+      { new: true } 
+    );
+  
+    res.send(updatedData);
+  });
+  
 
 
 
