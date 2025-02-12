@@ -279,6 +279,15 @@ app.get('/userRole', async(req,res)=>{
     res.send(result);
   })
   
+  // ai test 
+
+app.get('/testAi', async(req,res)=>{
+    const prompt = "do you know chat gpt";
+  
+    const result = await model.generateContent(prompt);
+    console.log(result.response.text());
+    res.send({answer:"working" })
+  })
 
 
 
