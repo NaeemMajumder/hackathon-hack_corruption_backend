@@ -112,6 +112,14 @@ app.get("/latestPosts", async (req, res) => {
 });
 
 
+app.put("/admin/allUsers/:id", async (req, res) => {
+    let id = req.params.id;
+    let updateData = await UserData.findByIdAndUpdate(id, {
+      idBan: req.body.isBan,
+    });
+    res.send(updateData);
+  });
+
 
 
 
