@@ -178,9 +178,25 @@ app.post("/createPost", async (req, res) => {
 });
 
 
+app.get("/myPosts", async (req, res) => {
+    let email = req.query.email;
+    const user = await UserData.findOne({ email: email }).populate("posts");
+    const userPosts = user.posts.sort(
+      (a, b) => new Date(b.posted_time) - new Date(a.posted_time)
+    ); // Sort posts by posted_time in descending order
+    res.send(userPosts);
+  });
 
 
-
+  app.put("/allReports/:id", async (req, res) => {
+    let id = req.params.id;
+    let updatedData = req.body;
+  
+    let result = await AllReports.findByIdAndUpdate(id, updatedData);
+  
+    res.send(result);
+  });
+  
 
 
 
