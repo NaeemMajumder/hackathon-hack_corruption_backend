@@ -290,6 +290,26 @@ app.get('/testAi', async(req,res)=>{
   })
 
 
+  app.get("/aiGenerateText", async(req,res)=>{
+    const imageUrl = req.query.imgUrl;
+  
+    const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
+    // console.log(response.data);
+  
+    // const responseData = response.data;
+    const responseData = {
+      inlineData: {
+        data: Buffer.from(response.data).toString('base64'),
+        mimeType: "image/png",
+      }
+    };
+  
+    const result = await model.generateContent(["Analyze the uploaded image and generate a detailed, factual description related to corruption, such as bribery, fraud, misuse of power, or unethical activities. Clearly describe the scene, actions, and any visible evidence while maintaining accuracy and neutrality. Avoid speculation, personal identifiers, or phrases like 'this image is about.' If the image is unrelated to corruption or contains inappropriate content, respond with: 'This image does not appear to be related to corruption. Please upload a relevant image.'", responseData])
+    const generatedAiData = result.response.text();
+    res.send(generatedAiData);
+  });
+
+
 
 app.listen(port, () => {
   console.log(`port ${port} is listening`);
