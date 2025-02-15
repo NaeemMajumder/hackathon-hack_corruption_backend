@@ -73,7 +73,7 @@ app.get("/userData", async (req, res) => {
 // update user data
 app.put("/userData", async (req, res) => {
   let email = req.query.email;
-  console.log(email);
+  // console.log(email);
 
   let userData = req.body;
 
@@ -118,7 +118,7 @@ app.put("/admin/allUsers/:id", async (req, res) => {
 
 app.get("/admin/allUsers/:id", async (req, res) => {
   let id = req.params.id;
-  console.log(id);
+  // console.log(id);
   let userData = await UserData.findById(id);
   res.send(userData);
 });
@@ -139,7 +139,7 @@ async function postReport(title, description, imageDescription) {
       const { data } = await axios.post(url, formData, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error('Error:', error.message);
     }
@@ -150,7 +150,7 @@ async function postReport(title, description, imageDescription) {
 // // create post
 app.post("/createPost", async (req, res) => {
   let postData = req.body;
-  console.log(postData);
+  // console.log(postData);
   let newPost = {};
 
   if (postData.phoneNumber) {
@@ -329,7 +329,7 @@ app.put("/allReports/:id", async (req, res) => {
 app.get('/userRole', async(req,res)=>{
   const email = req.query.email;
   const userRole = await UserData.findOne({ email }).select("role");
-  console.log(userRole);
+  // console.log(userRole);
   res.send(userRole?.role)
 })
 
@@ -348,7 +348,7 @@ app.put("/posts/:id", async (req, res) => {
   let updatedData = await AllReports.findByIdAndUpdate(id, {
     verification_status: req.body.verification_status,
   });
-  console.log(updatedData);
+  // console.log(updatedData);
   res.send(updatedData);
 });
 
@@ -389,7 +389,7 @@ app.get("/successReport/:id", async(req,res)=>{
 
 app.post("/successReport", async (req, res) => {
   let successReportPost = req.body;
-  console.log(successReportPost);
+  // console.log(successReportPost);
 
   let newSuccessPost = new SuccessReports(successReportPost);
   let result = await newSuccessPost.save();
@@ -417,12 +417,12 @@ app.get('/testAi', async(req,res)=>{
   const prompt = "do you know chat gpt";
 
   const result = await model.generateContent(prompt);
-  console.log(result.response.text());
+  // console.log(result.response.text());
   res.send({answer:"working" })
 })
 
 app.get("/aiGenerateText", async(req,res)=>{
-    console.log("backend working")
+    // console.log("backend working")
   const imageUrl = req.query.imgUrl;
 
   const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
@@ -438,7 +438,7 @@ app.get("/aiGenerateText", async(req,res)=>{
 
   const result = await model.generateContent(["Analyze the uploaded image and generate a detailed, factual description related to corruption, such as bribery, fraud, misuse of power, or unethical activities. Clearly describe the scene, actions, and any visible evidence while maintaining accuracy and neutrality. Avoid speculation, personal identifiers, or phrases like 'this image is about.' If the image is unrelated to corruption or contains inappropriate content, respond with: 'This image does not appear to be related to corruption. Please upload a relevant image.'", responseData])
   const generatedAiData = result.response.text();
-  console.log(generatedAiData);
+  // console.log(generatedAiData);
   res.send(generatedAiData);
 });
 
